@@ -41,7 +41,7 @@ class InactiveAppsMapper extends Mapper {
         $result = $this->execute($sql, $params);
         $users = [];
 
-        while($row = $result->fetchRow()) {
+        while($row = $result->fetch()) {
             $users[] = $row['user_id'];
         }
 
