@@ -12,10 +12,11 @@
 namespace OCA\InactiveApps\Service;
 
 use OCP\AppFramework\Utility\ITimeFactory;
+use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\IRequest;
 
 use OCA\InactiveApps\Db\InactiveAppsMapper;
-
+use OCA\InactiveApps\Db\InactiveApp;
 
 class InactiveAppsService {
 
@@ -39,8 +40,22 @@ class InactiveAppsService {
 
 
     public function logRequest() {
-        error_log($this->userId . ' at ' . $this->timeFactory->getTime() .
-            ' with url ' . $this->request->server['REQUEST_URI']);
+        $url = $this->request->server['REQUEST_URI'];
+        $regex = '%index.php/apps/(\w+)/?.*%i';
+
+        if (preg_match($regex, $url, $matches) && $matches[1]) {
+            try {
+                $app = $this->mapper->find($matches[1], $this->userId);
+                $app->setLastAccess($this->timeFactory->getTime());
+                $this->mapper->update($app);
+            } catch (DoesNotExistException $e) {
+                $app = new InactiveApp();
+                $app->setAppId($matches[1]);
+                $app->setUserId($this->userId);
+                $app->setLastAccess($this->timeFactory->getTime());
+                $this->mapper->insert($app);
+            }
+        }
     }
 
 }
