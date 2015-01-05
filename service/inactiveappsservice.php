@@ -58,4 +58,16 @@ class InactiveAppsService {
         }
     }
 
+
+    /**
+     * @param string $appId the id of the app, e.g. news
+     * @param int $days how many days are allowed before the user is marked as
+     * inactive
+     */
+    public function findInactiveUsersForApp($appId, $days) {
+        $allowed = (int) $days * 24 * 60 * 60;  // figure out the seconds
+        $now = $this->timeFactory->getTime();
+        return $this->mapper->findAllInactiveUsersForApp($appId, $now, $allowed);
+    }
+
 }

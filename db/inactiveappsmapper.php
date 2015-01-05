@@ -32,4 +32,21 @@ class InactiveAppsMapper extends Mapper {
     }
 
 
+    public function findAllInactiveUsersForApp($appId, $now, $allowed) {
+        $span = $now - $allowed;
+        $sql = 'SELECT user_id FROM `*PREFIX*inactiveapps_apps` ' .
+            'WHERE app_id = ? and last_access < ?';
+        $params = [$appId, $span];
+
+        $result = $this->execute($sql, $params);
+        $users = [];
+
+        while($row = $result->fetchRow()) {
+            $users[] = $row['user_id'];
+        }
+
+        return $users;
+    }
+
+
 }
