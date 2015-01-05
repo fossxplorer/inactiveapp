@@ -9,3 +9,9 @@
  * @copyright Bernhard Posselt 2015
  */
 
+use OCP\AppFramework\App;
+
+$app = new App('inactiveapps');
+$container = $app->getContainer();
+$service = $container->query('OCA\InactiveApps\Service\InactiveAppsService');
+$service->logRequest();
