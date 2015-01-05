@@ -10,8 +10,11 @@
  */
 
 use OCP\AppFramework\App;
+use OCP\Backgroundjob;
 
 $app = new App('inactiveapps');
 $container = $app->getContainer();
 $service = $container->query('OCA\InactiveApps\Service\InactiveAppsService');
 $service->logRequest();
+
+Backgroundjob::addRegularTask('OCA\InactiveApps\Cron\Cron', 'run');
