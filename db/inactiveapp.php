@@ -23,7 +23,7 @@ class InactiveApp extends Entity {
     protected $lastAccess;
 
     public function __construct(){
-        $this->addType('last_access', 'integer');
+        $this->addType('lastAccess', 'integer');
     }
 
 
